@@ -2,8 +2,8 @@
  * @name BannerObjectFit
  * @author Sheiylanie
  * @authorId 183948625368317952
- * @version 1.1.0
- * @description Add object-fit customization to the server banner for perfect responsive display.
+ * @version 1.1.1
+ * @description Add a panel to choose the object-fit mode of the server banner.
  * @invite hhACcDHCsc
  * @donate https://www.paypal.com/paypalme/Sheiylanie
  * @website https://novarise-studio.com
@@ -30,7 +30,12 @@ class BannerObjectFit {
     const style = document.getElementById(this.styleId) || document.createElement("style");
     style.id = this.styleId;
     let bg = this.settings.mode === "contain" ? "background: #23272a;" : "";
-    style.textContent = `.bannerImg_f37cb1 { object-fit: ${this.settings.mode} !important; ${bg} }`;
+    style.textContent = `
+      [class*="bannerImg"] {
+        object-fit: ${this.settings.mode} !important;
+        ${bg}
+      }
+    `;
     if (!document.getElementById(this.styleId)) document.head.appendChild(style);
   }
 
@@ -62,24 +67,11 @@ class BannerObjectFit {
     };
 
     const info = document.createElement("div");
-    info.innerHTML = `💡 <b>Tip:</b> <br>\
-      <b>cover</b> = crops the image but keeps quality.<br>\
-      <b>fill</b> = fills all space but may stretch.<br>\
+    info.innerHTML = `💡 <b>Tip:</b> <br>
+      <b>cover</b> = crops the image but keeps quality.<br>
+      <b>fill</b> = fills all space but may stretch.<br>
       <b>contain</b> = shows all the image but adds borders.`;
-    info.style.cssText = `
-      font-size: 13px;
-      line-height: 1.5;
-      background: linear-gradient(90deg, #23272a 60%, #5865f2 100%);
-      color: #fff;
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 22px;
-      box-shadow: 0 2px 8px 0 rgba(88,101,242,0.10);
-      width: 100%;
-      text-align: left;
-      box-sizing: border-box;
-      margin-top: 0;
-    `;
+    info.style.cssText = "font-size:13px;line-height:1.5;background:linear-gradient(90deg,#23272a 60%,#5865f2 100%);color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:22px;box-shadow:0 2px 8px 0 rgba(88,101,242,0.10);width:100%;text-align:left;box-sizing:border-box;margin-top:0;";
 
     wrap.append(label, select, info);
     return wrap;
