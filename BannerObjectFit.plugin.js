@@ -2,7 +2,7 @@
  * @name BannerObjectFit
  * @author Sheiylanie
  * @authorId 183948625368317952
- * @version 1.1.1
+ * @version 1.1.2
  * @description Add a panel to choose the object-fit mode of the server banner.
  * @invite hhACcDHCsc
  * @donate https://www.paypal.com/paypalme/Sheiylanie
@@ -11,10 +11,10 @@
  * @updateUrl https://raw.githubusercontent.com/SheiylaDev/BannerObjectFit/main/BannerObjectFit.plugin.js
  */
 
-class BannerObjectFit { 
+module.exports = class BannerObjectFit {
   constructor() {
     this.styleId = "banner-object-fit-style";
-    this.settings = BdApi.loadData("BannerObjectFit", "settings") || { mode: "fill" };
+    this.settings = BdApi.Data.load("BannerObjectFit", "settings") || { mode: "fill" };
   }
 
   start() {
@@ -22,26 +22,18 @@ class BannerObjectFit {
   }
 
   stop() {
-    const style = document.getElementById(this.styleId);
-    if (style) style.remove();
+    BdApi.DOM.removeStyle(this.styleId);
   }
 
   applyStyle() {
-    const style = document.getElementById(this.styleId) || document.createElement("style");
-    style.id = this.styleId;
     let bg = this.settings.mode === "contain" ? "background: #23272a;" : "";
-    style.textContent = `
-      [class*="bannerImg"] {
-        object-fit: ${this.settings.mode} !important;
-        ${bg}
-      }
-    `;
-    if (!document.getElementById(this.styleId)) document.head.appendChild(style);
+    const css = `[class*="bannerImg"] { object-fit: ${this.settings.mode} !important; ${bg} }`;
+    BdApi.DOM.addStyle(this.styleId, css);
   }
 
   getSettingsPanel() {
     const wrap = document.createElement("div");
-    wrap.style.cssText = "padding: 16px; font-family: sans-serif; color: var(--header-primary);";
+    wrap.style.cssText = "padding:16px;font-family:sans-serif;color:var(--header-primary);";
 
     const label = document.createElement("label");
     label.textContent = "Banner display mode:";
@@ -62,7 +54,7 @@ class BannerObjectFit {
     select.style.cssText = "display:block;width:100%;padding:8px 10px;font-size:14px;border-radius:6px;background:var(--background-secondary);border:1px solid var(--background-modifier-border);color:var(--text-normal);margin-bottom:16px;box-sizing:border-box;";
     select.onchange = e => {
       this.settings.mode = e.target.value;
-      BdApi.saveData("BannerObjectFit", "settings", this.settings);
+      BdApi.Data.save("BannerObjectFit", "settings", this.settings);
       this.applyStyle();
     };
 
@@ -76,6 +68,4 @@ class BannerObjectFit {
     wrap.append(label, select, info);
     return wrap;
   }
-}
-
-module.exports = BannerObjectFit; 
+}; 
